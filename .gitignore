@@ -1,0 +1,9 @@
+# 忽略 bin 目录
+bin/
+
+# 忽略 safetensors、bin 和 mp4 文件
+*.safetensors
+*.bin
+*.mp4
+
+.venv/
