@@ -1,0 +1,322 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[PREPRINT]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{amsmath}   
+\usepackage{amssymb}   
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+
+%Including images in your LaTeX document requires adding
+%additional package(s)
+\usepackage{graphicx}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{group project of nlp -- task1}
+
+
+
+\author{
+  Lemon MC555634 \\
+  Foster MC552603 \\
+  Alex MC552582 \\
+}
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+With the rise of large language models, there is growing demand for emotionally intelligent dialogue systems. Meanwhile, increasing social pressure has elevated mental health issues such as emotional void and depression. Timely detection and de-escalation of extreme emotions are thus critical, whether by human agents or AI. In this context, the timely identification and appropriate response to extreme emotions or unmet emotional expectations is essential. Whether delivered by human agents or large language models, these responses rely on precise and swift emotional detection mechanisms. While current emotion detection models have made significant progress in terms of accuracy and text description capabilities, they still predominantly predict emotions only after a customer has fully expressed their statement, focusing primarily on emotion classification. Notably, these models often neglect to analyze key elements such as the main emotional cause and emotional changes within the sentence, resulting in a lack of real-time responsiveness.
+
+In this study, we propose a method that leverages contextual and temporal information to predict emotional shifts as customers express their views,  enabling interventions before emotions escalate to extreme levels. By accurately predicting emotional causes and transitions in real-time, we aim to facilitate immediate, empathetic responses, either from human agents or AI systems, preventing further emotional escalation. This approach relies on the effective segmentation and prediction of customer language data, contributing to a more empathetic and timely interaction that enhances the psychological efficacy of responses in both psychological models and service-oriented settings.
+\end{abstract}
+
+\section{related works}
+Text segmentation and discourse structure analysis have long been important topics in natural language processing (NLP). Traditional sentiment analysis methods primarily focus on sentence-level sentiment classification, but these approaches face limitations when handling complex emotional expressions\cite{naebzadeh-askari-2025-ginger}. In recent years, Rhetorical Structure Theory (RST) and Elementary Discourse Unit (EDU) segmentation techniques have gained widespread adoption, serving as critical tools in text analysis and sentiment recognition.
+
+\subsection{Rhetorical Structure Theory (RST) and EDU Segmentation}
+Rhetorical Structure Theory (RST), proposed by \citealt{Mann:87}, aims to reveal how sentences within a text are logically connected through specific discourse relations such as elaboration, contrast, and causality. Within RST, the Elementary Discourse Unit (EDU) refers to the smallest segment of text that can be analyzed independently\cite{saha-etal-2022-edu}. RST models segment texts into multiple EDUs and analyze the relationships between these EDUs to understand the overall structure of the text. EDU segmentation provides a foundation not only for deeper text comprehension but also for tasks like sentiment analysis and discourse reasoning\cite{Das:15}.
+
+In its early stages, EDU segmentation relied heavily on manual annotation\cite{sediqin2025esurf}. However, with the development of automated techniques, machine learning-based tools have emerged, leveraging statistical learning and deep learning methods to automatically perform EDU segmentation, achieving higher accuracy and efficiency\cite{wang-etal-2018-toward}.
+\subsection{EDU Segmentation Tools and Methods}
+As EDU segmentation techniques have evolved, numerous tools and frameworks have been developed. For example, Purdue University and University of Arizona researchers developed several RST parsers dedicated to constructing RST tree structures and EDU segmentation \cite{surdeanu-etal-2015-two}. These tools not only offer in-depth parsing based on RST but also promote the application of EDU segmentation in fields like education and information science.
+
+Additionally, the DISRPT Shared Task (Discourse Relation Parsing and Treebanking) has been an essential competition task in advancing EDU segmentation techniques. Since 2019, the DISRPT task has continuously pushed forward the research on EDU segmentation, connective detection, and discourse relation classification\cite{lin-etal-2019-unified}. In 2023, the DISRPT task expanded to include new languages (Thai and Italian) and additional discourse treebanks, enhancing the adaptability of EDU segmentation techniques in multilingual and multi-framework contexts \cite{braud-etal-2023-disrpt}. These tasks have not only driven the development of EDU segmentation but also introduced new algorithms and frameworks, such as PDTB(penn discourse treebank\cite{prasad-etal-2008-penn}), SDRT (Segmented Discourse Representation Theory\cite{lascarides2007segmented}), and others.
+\subsection{EDU Segmentation and Its Integration with Sentiment Analysis}
+EDU segmentation is not only crucial for discourse analysis but also finds widespread use in sentiment analysis. \citealt{angelidis-lapata-2018-multiple}, in their paper Multiple Instance Learning Networks for Fine-Grained Sentiment Analysis, proposed a sentiment analysis method based on EDU segmentation. This approach integrates a Multiple Instance Learning (MIL) framework and performs sentiment classification for each EDU in a document, achieving higher accuracy than traditional sentence-level sentiment analysis. By using EDU segmentation as the foundation for sentiment analysis, this method captures subtle emotional shifts within texts, especially in long-form documents, offering a more nuanced understanding of sentiment.
+
+This EDU-based sentiment analysis method provides finer-grained sentiment analysis compared to sentence-level approaches, enabling more accurate detection of sentiment transitions and changes, and it has shown that introducing EDU segmentation helps identify emotional shifts more effectively, making sentiment analysis more precise and rich.
+
+\subsection{Emotion Prediction}
+Emotion prediction, as a core task in affective computing, has received significant attention in recent years. Many studies have made notable contributions to multimodal emotion recognition. For instance, \citep{zhang-tan-2025-ecerc} proposed a multi-modal emotion recognition network based on an evidence-cause attention mechanism, which captures the root causes and evolution of emotions in conversations, thereby improving the accuracy of emotion recognition. Similarly, \citep{Cheng:24} enhanced the Emotion-LLaMA model by incorporating convolutional attention mechanisms, which improved its performance in multimodal emotion recognition tasks, effectively handling complex multimodal input data.
+
+With the development of open-source tools, Emolysis\cite{ghosh2024emolysismultimodalopensourcegroup} provides a multimodal open-source toolset for group emotion analysis, enabling real-time emotion prediction and visualization, and offering researchers a flexible framework for emotion analysis. Additionally, MSE-Adapter\cite{Yang:25} adds multimodal sentiment analysis capabilities to large language models (LLMs), expanding the application scope of these models and enhancing their predictive power when dealing with multimodal inputs.
+
+In terms of fine-grained emotion analysis, Multiple Instance Learning Networks\cite{angelidis-lapata-2018-multiple} introduced a new network architecture designed to delve into various emotional layers and dimensions, allowing sentiment analysis to go beyond just polarity and to recognize emotional intensity and subtle changes. Moreover, the DARER model\cite{xing-tsang-2022-darer} utilizes a dual-task temporal relational recurrent reasoning network for joint dialog sentiment classification and action recognition, improving the emotional understanding and processing capabilities of dialogue systems.
+
+Lastly, the research on joint modeling of emotion and abusive language detection explores the integration of emotion analysis with harmful language detection\cite{rajamanickam-etal-2020-joint}. This approach not only identifies emotions within text but also effectively detects potentially abusive language, thus offering a more comprehensive content moderation solution for online platforms and social networks.
+
+However, despite the significant advancements made by these methods in multimodal emotion prediction, there are still challenges. First, most existing emotion analysis approaches lack fine-grained text segmentation, failing to capture subtle emotional variations within sentences. Secondly, many existing methods rely on static models and lack real-time, context-aware prediction capabilities. Future research could focus on enhancing the fine-grained processing ability of emotion analysis and incorporating dynamic context changes to improve the real-time accuracy of emotion prediction.
+
+\section{dataset}
+\subsection{\textbf{MELD}\cite{poria-etal-2019-meld}}
+Year: 2019\\
+Source:  MELD: A Multimodal Multi-Party Dataset for Emotion Recognition in Conversations\\
+Description: The MELD dataset is derived from the TV show "Friends" and contains approximately 13,000 utterances across 1,433 multi-speaker conversations, providing text, audio, and video modalities. The dataset is finely annotated, covering seven types of emotions, and significantly reduces ambiguous labels. Its characteristics include multimodality, multiple characters, and frequent emotional changes, making it suitable for studying dialogue emotion recognition and dynamic emotion modeling. We removed some shorter noisy dialogues, such as simple responses or those with significant background audience noise, or context-dependent  short utterances and re-annotated all the data.\\
+URL: https://github.com/declare-lab/MELD.git
+
+\subsection{\textbf{CH-SIMSv2s}\cite{liu2022makeacousticvisualcues}}
+Year: 2022\\
+Source:  Make Acoustic and Visual Cues Matter: CH-SIMS v2.0 Dataset and AV-Mixup Consistent Module\\
+Description: CH-SIMS v2.0 is an expanded version of the CH-SIMS multimodal sentiment analysis dataset, doubling in size and adding 2121 finely annotated video clips, along with 10161 unannotated raw videos to enhance acoustic and visual cues. The dataset encompasses text, audio, and video multimodal information, with a particular emphasis on nonverbal emotional cues, which helps improve multimodal sentiment prediction performance and supports the research and application of related models in real-world HCI scenarios.
+\\
+URL: https://github.com/thuiar/ch-sims-v2.git
+
+\subsection{Annotation}
+15,000 manually and meticulously annotated samples are annotated based on muti-dimensional system:\\
+1. 7 basic class: Joy, Anger, Disgust, Fear, Sadness, Surprise, Neutral.\\
+2. Fine-Grained 27-Class (GoEmotion): Based on Google’s GoEmotion scheme and supports multi-label annotation.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2cm}|p{4cm}|}
+\hline
+\textbf{7-class} & \textbf{ GoEmotions class} \\
+\hline
+Anger & anger, annoyance, disapproval \\
+\hline
+Disgust & disgust, disapproval \\
+\hline
+Fear & fear, nervousness \\
+\hline
+Joy & joy, amusement, excitement, pride, optimism, love, admiration, relief \\
+\hline
+Neutral & confusion, curiosity, realization, surprise \\
+\hline
+Sadness & sadness, disappointment, remorse, grief \\
+\hline
+Surprise & surprise, realization \\
+\hline
+\end{tabular}
+\caption{7-class emotions and GoEmotions}
+\end{table}
+
+
+
+
+
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Overall Architecture}
+\label{subsec:overall_arch}
+
+Our goal is to perform conversational emotion recognition while preserving a basic level of semantic understanding of the dialogue. To this end, we adopt LLaMA-2 as the main backbone and treat emotion recognition as a multimodal instruction-following task. Specifically, we use the LLaMA-2-7B-Chat model (\texttt{meta-llama/Llama-2-7b-chat-hf}) as our language backbone, and adapt it with LoRA for parameter-efficient fine-tuning.
+
+For each utterance, the model takes three types of inputs:
+\begin{enumerate}
+    \item Text: the ASR transcript of the speech (Chinese and/or English), tokenized directly by the LLaMA tokenizer;
+    \item Visual frames: sampled from the corresponding video segment;
+    \item Task prompts: instruction-style text describing the emotion recognition objective and dialogue context.
+\end{enumerate}
+
+We employ CLIP and multilingual HuBERT (mHuBERT) as modality-specific encoders for video and audio, respectively. The CLIP image encoder (\texttt{laion/CLIP-convnext\_base}) is used as a video encoder, and mHuBERT is used as a speech encoder for bilingual (Chinese--English) utterances. The extracted video and audio features are projected into the LLaMA embedding space through learnable linear layers. The projected features are then concatenated with prompt tokens and dialogue tokens, and the resulting sequence is passed to the LoRA-adapted LLaMA-2 for joint semantic and affective modeling.
+
+At the output side, we attach a linear classification head on top of the final hidden state corresponding to a special emotion token (e.g., \texttt{<EMO>}). The head maps the LLaMA representation to a distribution over predefined emotion categories, and the model is optimized with a cross-entropy loss.
+
+\subsection{Unimodal Encoder Pre-adaptation}
+\label{subsec:unimodal}
+
+Before multimodal fusion training, we first ensure that the unimodal encoders can produce meaningful emotion-related representations on our target dataset. Therefore, we perform a two-stage training strategy, where Stage~I focuses on unimodal encoder adaptation and Stage~II focuses on multimodal fusion with LLaMA-2.
+
+\subsubsection{Video Encoder (CLIP Image Tower)}
+\label{subsubsec:video}
+
+We initialize the visual encoder with the publicly released CLIP checkpoint \texttt{CLIP-convnext\_base} from LAION, and only use its image tower as a frame-level feature extractor. The text tower of CLIP is not used in our framework.
+
+For each video segment corresponding to an utterance, we uniformly sample $K$ frames (e.g., 8--16 frames depending on segment length), resize them to a fixed resolution, and feed them through the CLIP image encoder to obtain frame-level embeddings $\{v_1, \dots, v_K\}$. We then apply temporal pooling (average pooling in our implementation) to obtain a single video-level representation:
+\begin{equation}
+    v_{\text{video}} = \frac{1}{K} \sum_{i=1}^{K} v_i.
+\end{equation}
+
+To adapt the encoder to emotion recognition, we add a linear classification layer on top of $v_{\text{video}}$ and fine-tune the whole video branch on the training set using a video-level cross-entropy loss:
+\begin{equation}
+    \mathcal{L}_{\text{video}} = - \sum_{c} y_c \log p_c,
+\end{equation}
+where $y_c$ is the one-hot ground truth label and $p_c$ is the predicted probability for class $c$.
+
+We monitor the macro F1 score on the validation set during this stage. Once the F1 score exceeds $0.5$, we regard the adapted CLIP encoder as having learned basic sensitivity to emotion-related visual cues. At this point, we freeze the CLIP parameters in the subsequent multimodal fusion stage, and only keep the linear projection layer to map $v_{\text{video}}$ into the LLaMA embedding space.
+
+\subsubsection{Audio Encoder (Multilingual HuBERT)}
+\label{subsubsec:audio}
+
+Our training corpus is bilingual and contains both Chinese and English speech. To capture language-agnostic acoustic patterns that are relevant to emotion, we adopt a multilingual HuBERT (mHuBERT) model as the audio encoder. Unlike the video and audio branches, the textual transcript is not encoded by a separate text encoder; instead, the ASR transcript is directly tokenized and fed into the LLaMA backbone in the multimodal fusion stage.
+
+For each utterance, we take the corresponding speech waveform as input to mHuBERT and obtain frame-level hidden representations. We then apply temporal pooling (mean pooling in our implementation) over the hidden states to derive an utterance-level audio embedding $t_{\text{audio}}$. Similar to the video branch, we place a linear classification layer on top of $t_{\text{audio}}$ and fine-tune mHuBERT on the same emotion labels using a cross-entropy loss:
+\begin{equation}
+    \mathcal{L}_{\text{audio}} = - \sum_{c} y_c \log q_c,
+\end{equation}
+where $y_c$ is the one-hot ground truth label and $q_c$ is the predicted probability for class $c$ from the audio branch.
+
+We again use macro F1 on the validation set as the main metric. When the F1 score surpasses $0.5$, we interpret this as evidence that the base mHuBERT encoder has acquired a minimal ability to attend to affective cues in bilingual speech. In Stage~II, we either freeze mHuBERT or fine-tune it with a smaller learning rate, and use a learnable linear projector to map $t_{\text{audio}}$ into the LLaMA embedding space for multimodal fusion.
+
+\subsection{Multimodal Fusion with LoRA-adapted LLaMA-2}
+\label{subsec:fusion}
+
+After obtaining video-level and audio-level representations, we project them into the same dimensionality as the LLaMA token embeddings using separate linear layers:
+\begin{equation}
+    h_v = W_v \, v_{\text{video}}, \quad
+    h_a = W_a \, t_{\text{audio}},
+\end{equation}
+where $W_v$ and $W_a$ are learnable projection matrices.
+
+We then convert $h_v$ and $h_a$ into pseudo-tokens and insert them into a carefully designed instruction prompt. A typical input sequence to LLaMA-2 is of the form:
+\begin{quote}
+\textbf{[System prompt]} \\
+\texttt{You are an assistant that performs emotion recognition from conversation.} \\[0.3ex]
+\textbf{[Multimodal prompt]} \\
+\texttt{Given the following video features, audio content, and dialogue context, predict the speaker's emotion.} \\[0.3ex]
+\texttt{<VIDEO> [h\_v] </VIDEO>} \\
+\texttt{<AUDIO> [h\_a] </AUDIO>} \\
+\texttt{<TEXT> ASR transcript tokens </TEXT>} \\
+\texttt{<EMO>}
+\end{quote}
+
+
+Here, \texttt{<VIDEO>} and \texttt{<AUDIO>} are special markers indicating the boundaries of visual and audio pseudo-tokens, and \texttt{<TEXT>} denotes the region where the raw ASR tokens are placed. The token \texttt{<EMO>} is the position where the model is expected to generate or classify the final emotion. The LoRA adapters are inserted into the attention and feed-forward layers of LLaMA-2-7B-Chat so that we can fine-tune the model efficiently without updating all backbone parameters.
+
+During Stage~II training, we optimize the LoRA parameters, the linear projection layers $W_v$, $W_a$, and the final emotion classifier jointly with a cross-entropy loss:
+\begin{equation}
+    \mathcal{L}_{\text{fusion}} = - \sum_{c} y_c \log r_c,
+\end{equation}
+where $r_c$ is the predicted probability for class $c$ from the fused multimodal model.
+
+The total loss can be written as
+\begin{equation}
+    \mathcal{L} = \lambda_{\text{video}} \mathcal{L}_{\text{video}}
+                + \lambda_{\text{audio}} \mathcal{L}_{\text{audio}}
+                + \lambda_{\text{fusion}} \mathcal{L}_{\text{fusion}},
+\end{equation}
+with non-negative weights $\lambda_{\text{video}}, \lambda_{\text{audio}}, \lambda_{\text{fusion}}$. In a simpler setting, after the unimodal encoders have been pre-adapted in Stage~I, we can set $\lambda_{\text{video}} = \lambda_{\text{audio}} = 0$ and only train with $\mathcal{L}_{\text{fusion}}$ in Stage~II.
+
+\subsection{Training Strategy}
+\label{subsec:training}
+
+We summarize the overall training procedure as follows.
+
+\paragraph{Stage I: Unimodal encoder adaptation.}
+\begin{enumerate}
+    \item Initialize the CLIP image encoder and mHuBERT from publicly available checkpoints.
+    \item Attach a linear classifier to each encoder and train them separately on the emotion labels using video-level and audio-level cross-entropy losses, $\mathcal{L}_{\text{video}}$ and $\mathcal{L}_{\text{audio}}$.
+    \item Monitor validation macro F1; once it exceeds $0.5$ for both encoders, we regard them as having basic emotion awareness.
+\end{enumerate}
+
+\paragraph{Stage II: Multimodal fusion training.}
+\begin{enumerate}
+    \item Freeze (or partially freeze) the CLIP and mHuBERT encoders; keep trainable linear projection layers into the LLaMA embedding space.
+    \item Prepare instruction-style prompts that combine projected video features, projected audio features, and textual transcripts (directly tokenized by the LLaMA tokenizer), together with dialogue context.
+    \item Attach a linear classification head to the LLaMA representation at the \texttt{<EMO>} position.
+    \item Fine-tune the LoRA parameters, projection layers, and the classification head jointly using the fusion loss $\mathcal{L}_{\text{fusion}}$.
+\end{enumerate}
+
+\section{Streaming Inference}
+
+\subsection{EDU-based Online Segmentation}
+
+In many real-world applications, sentiment recognition must operate on
+continuously arriving text and produce predictions in (near) real time.
+Naively feeding the entire history into the model at each step leads to
+high latency and computational cost, and makes it difficult to promptly
+reflect changes induced by the most recent input. To address this issue,
+we adopt an Elementary Discourse Unit (EDU) segmentation strategy.
+
+Following Rhetorical Structure Theory (RST)~\cite{mann1987rhetorical},
+the incoming text stream is segmented into a sequence of EDUs, where
+each EDU is a minimal unit that still forms a coherent discourse segment.
+Compared with fixed-size sliding windows, EDU-based segmentation better
+aligns with natural discourse boundaries and reduces the number of
+syntactic or semantic dependencies that are split across segments.
+Consequently, each model input unit is semantically more self-contained,
+which facilitates incremental processing while preserving local
+coherence. Operating at the EDU level therefore enables streaming
+inference with substantially shorter per-step inputs, without discarding
+the underlying discourse structure of the text.
+
+\subsection{Cache-aware Streaming Architecture}
+
+On top of EDU segmentation, we design a cache-aware streaming
+architecture to balance contextual coverage and computational efficiency.
+The overall pipeline is illustrated in Figure~\ref{fig:streaming-arch}:
+the raw text stream is first segmented into EDUs and then processed
+sequentially. For each EDU, the model applies a preprocessing and
+encoding stage and produces a hidden representation immediately before
+the decoder layer. This representation, rather than the raw input, is
+stored in a cache and reused for subsequent steps.
+
+Concretely, we maintain two caches: (i) a \emph{feature cache} that
+stores the hidden states of all EDUs observed so far, and (ii) a
+\emph{result cache} that stores the corresponding sentiment predictions.
+When the $t$-th EDU arrives, only this new EDU is passed through the
+preprocessing and encoder to obtain a hidden representation
+$\mathbf{h}_t$. The new state is then appended to the existing feature
+cache,
+\[
+[\mathbf{h}_1, \mathbf{h}_2, \dots, \mathbf{h}_{t-1}]
+\;\longrightarrow\;
+[\mathbf{h}_1, \mathbf{h}_2, \dots, \mathbf{h}_{t-1}, \mathbf{h}_t],
+\]
+and the decoder operates on the cached sequence to produce the sentiment
+prediction $y_t$ for the current EDU. The predictions are stored in the
+result cache in temporal order, yielding a sequence of paired
+representations and outputs:
+\[
+[\mathbf{h}_1, y_1] \;-\; [\mathbf{h}_2, y_2] \;-\; \dots \;-\; [\mathbf{h}_t, y_t].
+\]
+
+Because the hidden states of the first $t-1$ EDUs are already cached,
+the model does not recompute them when a new EDU arrives. Instead, it
+performs a forward pass only for the incremental part and reuses the
+previous states as contextual information. This design allows the model
+to access the full discourse history in a unified representation space,
+thereby capturing long-range sentiment dynamics, while substantially
+reducing redundant computation. 
+
+
+
+
+\bibliography{latex/anthology_0,latex/custom}
+
+
+
+
+\end{document}
+
+
+\cite{}
